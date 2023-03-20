@@ -6,16 +6,13 @@
 //
 
 import SwiftUI
+import HealthKit
 
 struct ContentView: View {
+    var workoutTypes: [HKWorkoutActivityType] = [.cycling, .running, .walking]
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
-        }
-        .padding()
+        Text("Workout")
     }
 }
 
@@ -24,3 +21,5 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+
+
