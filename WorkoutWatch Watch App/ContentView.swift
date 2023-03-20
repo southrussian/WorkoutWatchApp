@@ -9,8 +9,6 @@ import SwiftUI
 import HealthKit
 
 struct ContentView: View {
-    var workoutTypes: [HKWorkoutActivityType] = [.cycling, .running, .walking]
-    
     var body: some View {
         Text("Workout")
     }
