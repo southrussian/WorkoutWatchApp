@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import HealthKit
 
-class WorkoutSession: NSObject, HKLiveWorkoutBuilderDelegate, HKWorkoutSessionDelegate, ObservableObject {
+class WorkoutSession: NSObject, HKLiveWorkoutBuilderDelegate, HKWorkoutSessionDelegate, ObservableObject { // добавление свойств тренировки
     @Published var distanceStatistics: HKStatistics?
     @Published var energyBurnedStatistics: HKStatistics?
     @Published var heartRateStatistics: HKStatistics?
@@ -24,12 +24,12 @@ class WorkoutSession: NSObject, HKLiveWorkoutBuilderDelegate, HKWorkoutSessionDe
     @Published var status = WorkoutSessionStatus.notStarted
     @Published var workoutData: HKWorkout?
     
-    @Published var session: HKWorkoutSession?
-    @Published var builder: HKLiveWorkoutBuilder?
+    @Published var session: HKWorkoutSession? // определение тренировочной сессии
+    @Published var builder: HKLiveWorkoutBuilder? // определение билдера тренировки
     
-    var healthStore = HKHealthStore()
+    var healthStore = HKHealthStore() // объект для запроса на работу с данными Apple Health
     
-    func workoutBuilder(_ workoutBuilder: HKLiveWorkoutBuilder, didCollectDataOf collectedTypes: Set<HKSampleType>) {
+    func workoutBuilder(_ workoutBuilder: HKLiveWorkoutBuilder, didCollectDataOf collectedTypes: Set<HKSampleType>) { // инициализация свойств класса тренировочной сессии
         self.distance = workoutBuilder.statistics(for: .init(.distanceWalkingRunning))?.sumQuantity()?.doubleValue(for: .meterUnit(with: .kilo))
         self.distanceStatistics = workoutBuilder.statistics(for: .init(.distanceWalkingRunning))
         self.heartRateStatistics = workoutBuilder.statistics(for: .init(.heartRate))
@@ -37,22 +37,21 @@ class WorkoutSession: NSObject, HKLiveWorkoutBuilderDelegate, HKWorkoutSessionDe
         self.elapsedTime = workoutBuilder.elapsedTime
         self.speedStatistics = workoutBuilder.statistics(for: .init(.runningSpeed))
         self.bpm = calculateBPM()
+    }
+    
+    func workoutBuilderDidCollectEvent(_ workoutBuilder: HKLiveWorkoutBuilder) { // метод нужен для соответствия протоколу
         
     }
     
-    func workoutBuilderDidCollectEvent(_ workoutBuilder: HKLiveWorkoutBuilder) {
+    func workoutSession(_ workoutSession: HKWorkoutSession, didChangeTo toState: HKWorkoutSessionState, from fromState: HKWorkoutSessionState, date: Date) { // метод нужен для соответствия протоколу
         
     }
     
-    func workoutSession(_ workoutSession: HKWorkoutSession, didChangeTo toState: HKWorkoutSessionState, from fromState: HKWorkoutSessionState, date: Date) {
+    func workoutSession(_ workoutSession: HKWorkoutSession, didFailWithError error: Error) { // метод нужен для соответствия протоколу
         
     }
     
-    func workoutSession(_ workoutSession: HKWorkoutSession, didFailWithError error: Error) {
-        
-    }
-    
-    func setupSession() {
+    func setupSession() { // здесь определяется то, с чем работает healthkit и его друг apple health
         let typesToShare: Set = [HKQuantityType.workoutType()]
         let typesToRead: Set = [HKQuantityType.quantityType(forIdentifier: .heartRate)!,
                                 HKQuantityType.quantityType(forIdentifier: .activeEnergyBurned)!,
@@ -61,11 +60,11 @@ class WorkoutSession: NSObject, HKLiveWorkoutBuilderDelegate, HKWorkoutSessionDe
         ]
         
         healthStore.requestAuthorization(toShare: typesToShare, read: typesToRead) { success, error in
-            
+            // запрос на работу с apple health
         }
     }
     
-    func startWorkoutSession() {
+    func startWorkoutSession() { // инициализация данных для начала тренировки
         let configuration = HKWorkoutConfiguration()
         configuration.activityType = .running
         configuration.locationType = .outdoor
@@ -82,20 +81,20 @@ class WorkoutSession: NSObject, HKLiveWorkoutBuilderDelegate, HKWorkoutSessionDe
                 if !success {
                     print("Невозможно начать сбор. Ошибка: \(error)")
                 }
-                self.status = .inProgress
+                self.status = .inProgress // перевод тренировки в режим "в процессе"
             }
         } catch {
             
         }
     }
     
-    func endWorkoutSession() {
-        guard let session = session else {
+    func endWorkoutSession() { // нужен для окончания тренировки
+        guard let session = session else { // проверяет сессию
             print("Невозможно закончить тренировку. Сессия отсутствует")
             return
         }
         
-        guard let builder = builder else {
+        guard let builder = builder else { // проверяет билдер
             print("Невозможно закончить тренировку. Билдер отсутствует")
             return
         }
@@ -118,16 +117,16 @@ class WorkoutSession: NSObject, HKLiveWorkoutBuilderDelegate, HKWorkoutSessionDe
         }
     }
     
-    func resumeWorkout() {
+    func resumeWorkout() { // возобновление тренировки
         guard let session = session else {
-            print("Невозможно подытожить тренировку. Сессия отсутствует")
+            print("Невозможно продолжить тренировку. Сессия отсутствует")
             return
         }
         session.resume()
         self.status = .inProgress
     }
     
-    func pauseWorkout() {
+    func pauseWorkout() { // приостановка тренировки
         guard let session = session else {
             print("Невозможно приостановить тренировку. Сессия отсутствует")
             return
@@ -137,11 +136,11 @@ class WorkoutSession: NSObject, HKLiveWorkoutBuilderDelegate, HKWorkoutSessionDe
     }
 }
 
-enum WorkoutSessionStatus {
+enum WorkoutSessionStatus { // кейсы для статуса тренировки
     case inProgress, complete, cancelled, notStarted, paused
 }
 
-extension WorkoutSession {
+extension WorkoutSession { // расчет пульса для свойства bpm
     private func calculateBPM() -> Double? {
         let countUnit: HKUnit = .count()
         let minuteUnit: HKUnit = .minute()
