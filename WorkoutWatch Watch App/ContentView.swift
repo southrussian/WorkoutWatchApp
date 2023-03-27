@@ -23,7 +23,7 @@ struct ContentView: View {
                     HStack {
                         Image(systemName: "ruler")
                         Spacer()
-                        Text(distanceFormatter())
+                        Text(distanceFormatter() + " км")
                     }
                 }
                 
@@ -39,7 +39,7 @@ struct ContentView: View {
                                 }
                             }
                         Spacer()
-                        Text(heartBeatFormatter())
+                        Text(heartBeatFormatter() + " уд/мин")
                     }
                 }
                 
@@ -56,7 +56,7 @@ struct ContentView: View {
                     HStack {
                         Image(systemName: "stopwatch")
                         Spacer()
-                        Text("\(workoutsession.elapsedTime!)")
+                        Text("\(workoutsession.elapsedTime!) с")
                     }
                 }
                 
@@ -86,7 +86,7 @@ struct ContentView: View {
                     HStack {
                         Image(systemName: "ruler")
                         Spacer()
-                        Text(distanceFormatter())
+                        Text(distanceFormatter() + " км")
                     }
                 }
                 
@@ -102,7 +102,7 @@ struct ContentView: View {
                                 }
                             }
                         Spacer()
-                        Text(heartBeatFormatter())
+                        Text(heartBeatFormatter() + " уд/мин")
                     }
                 }
                 
@@ -148,7 +148,7 @@ struct ContentView: View {
                     HStack {
                         Image(systemName: "ruler")
                         Spacer()
-                        Text(distanceFormatter())
+                        Text(distanceFormatter() + "км")
                     }
                 }
                 
@@ -164,14 +164,15 @@ struct ContentView: View {
                                 }
                             }
                         Spacer()
-                        Text(heartBeatFormatter())
+                        Text(heartBeatFormatter() + "уд/мин")
                     }
                 }
                 
                 if workoutsession.energyBurned != nil {
                     HStack {
-                        Text("\(workoutsession.energyBurned!) ккал")
+                        Image(systemName: "figure.run")
                         Spacer()
+                        Text("\(workoutsession.energyBurned!) ккал")
                     }
                 }
                 
@@ -179,7 +180,7 @@ struct ContentView: View {
                     HStack {
                         Image(systemName: "stopwatch")
                         Spacer()
-                        Text("\(workoutsession.elapsedTime!)")
+                        Text("\(workoutsession.elapsedTime!) с")
                     }
                 }
                 Button("Конец") {
