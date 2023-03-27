@@ -14,7 +14,7 @@ struct ContentView: View {
     var body: some View {
         VStack {
             if workoutsession.status == .notStarted {
-                Button("Начать тренировку") {
+                Button("Начать") {
                     workoutsession.setupSession()
                     workoutsession.startWorkoutSession()
                 }
@@ -45,8 +45,10 @@ struct ContentView: View {
                 
                 if workoutsession.energyBurned != nil {
                     HStack {
-                        Text("\(workoutsession.energyBurned!) ккал")
+                        Image(systemName: "figure.run")
                         Spacer()
+                        Text("\(workoutsession.energyBurned!) ккал")
+                        
                     }
                 }
                 
@@ -76,7 +78,7 @@ struct ContentView: View {
                     HStack {
                         Image(systemName: "stop.fill")
                             .padding(5)
-                        Text("Закончить тренировку")
+                        Text("Конец")
                     }
                 }
             } else if workoutsession.status == .paused {
@@ -106,8 +108,9 @@ struct ContentView: View {
                 
                 if workoutsession.energyBurned != nil {
                     HStack {
-                        Text("\(workoutsession.energyBurned!) ккал")
+                        Image(systemName: "figure.run")
                         Spacer()
+                        Text("\(workoutsession.energyBurned!) ккал")
                     }
                 }
                 
@@ -126,7 +129,7 @@ struct ContentView: View {
                     HStack {
                         Image(systemName: "play.circle")
                             .padding(5)
-                        Text("Продолжить тренировку")
+                        Text("Продолжить")
                     }
                 }
                 
@@ -137,7 +140,7 @@ struct ContentView: View {
                     HStack {
                         Image(systemName: "stop.fill")
                             .padding(5)
-                        Text("Закончить тренировку")
+                        Text("Конец")
                     }
                 }
             } else if workoutsession.status == .complete {
@@ -178,6 +181,9 @@ struct ContentView: View {
                         Spacer()
                         Text("\(workoutsession.elapsedTime!)")
                     }
+                }
+                Button("Конец") {
+                    workoutsession.status = .notStarted
                 }
             }
         }

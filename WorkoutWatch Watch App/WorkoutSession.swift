@@ -79,7 +79,7 @@ class WorkoutSession: NSObject, HKLiveWorkoutBuilderDelegate, HKWorkoutSessionDe
             session!.startActivity(with: Date())
             builder!.beginCollection(withStart: Date()) { success, error in
                 if !success {
-                    print("Невозможно начать сбор. Ошибка: \(error)")
+                    print("Невозможно начать сбор данных. Ошибка: \(error)")
                 }
                 self.status = .inProgress // перевод тренировки в режим "в процессе"
             }
@@ -101,7 +101,7 @@ class WorkoutSession: NSObject, HKLiveWorkoutBuilderDelegate, HKWorkoutSessionDe
         session.end()
         builder.endCollection(withEnd: Date()) { success, error in
             if !success {
-                print("Невозможно закончить сбор")
+                print("Невозможно закончить сбор данных")
                 return
             }
             
